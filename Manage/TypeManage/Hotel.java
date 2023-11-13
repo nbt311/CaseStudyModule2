@@ -1,5 +1,6 @@
 package Manage.TypeManage;
 import Input.Input;
+import src.Guest;
 import src.Room;
 import src.SingleRoom;
 import src.DoubleRoom;
@@ -12,7 +13,7 @@ import java.util.Scanner;
 
 public class Hotel {
     private Room[][] rooms;
-    private Map<String, String> guestList; // Danh sách khách trọ (số phòng, tên khách)
+    private Map<String, Guest> guestList; // Danh sách khách trọ (số phòng, tên khách)
     private Map<String, Double> revenueMap; // Map<Ngày, Tổng doanh thu>
 
     public Hotel(int numFloors, int roomsPerFloor) {
@@ -43,7 +44,7 @@ public class Hotel {
         }
         return null;
     }
-    public void checkIn(String roomNumber, String guestName) {
+    public void checkIn(String roomNumber, Guest guest) {
         Room room = getRoom(roomNumber);
         if (room == null) {
             System.out.println("Phòng không tồn tại. Không thể check-in.");
@@ -56,7 +57,7 @@ public class Hotel {
         // Nhập ngày giờ nhận phòng từ người dùng
         LocalDateTime checkInTime = Input.getLocalDateTimeFromUser("Nhập ngày giờ nhận phòng (dd/MM/yyyy HH:mm): ");
         room.occupy(checkInTime);
-        guestList.put(roomNumber, guestName);
+        guestList.put(roomNumber, guest);
         System.out.println("Check-in thành công cho phòng " + roomNumber + " vào lúc " + checkInTime);
         // ... Các xử lý khác sau khi check-in
         updateRoomStatusToFile();
@@ -151,8 +152,13 @@ public class Hotel {
     }
     public void displayGuestList() {
         System.out.println("Danh sách khách:");
-        for (Map.Entry<String, String> entry : guestList.entrySet()) {
-            System.out.println("Phòng " + entry.getKey() + ": " + entry.getValue());
+        for (Map.Entry<String, Guest> entry : guestList.entrySet()) {
+            String roomNumber = entry.getKey();
+            Guest guest = entry.getValue();
+            System.out.println("Phòng: " + roomNumber + ", Tên khách: " + guest.getName() +
+                    ", Số điện thoại: " + guest.getPhoneNumber() +
+                    ", Chứng minh thư: " + guest.getIDcard());
+            System.out.println("---------------------");
         }
     }
     //Ghi danh sách phòng vào File
@@ -180,7 +186,7 @@ public class Hotel {
     }
     public void readGuestListFromFile() {
         try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream("guest_list.dat")))) {
-            guestList = (Map<String, String>) ois.readObject();
+            guestList = (Map<String, Guest>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Lỗi khi đọc danh sách khách từ tệp.");
         }

@@ -4,12 +4,12 @@ import Print.StudentFormat;
 
 import java.io.Serializable;
 
-public class Customer implements Serializable {
+public class Guest implements Serializable {
     private  String name;
     private  String phoneNumber;
     private  String IDcard;
 
-    public Customer(String name, String phoneNumber, String IDcard) {
+    public Guest(String name, String phoneNumber, String IDcard) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.IDcard = IDcard;

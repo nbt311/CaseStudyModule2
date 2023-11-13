@@ -8,6 +8,7 @@ public class Example {
     private static Matcher matcher;
     private static final String CUSTOMER_NAME_REGEX = "^[\\p{L}]+(?:[\\s'-][\\p{L}]+)*$";
     private static final String PHONE_NUMBER_REGEX = "^0\\d{9}$|^\\+84\\d{9}$";
+    private static final String IDCARD_REGEX = "\\d{9}";
 
     public static boolean checkCustomerName(String customerName){
         pattern = Pattern.compile(CUSTOMER_NAME_REGEX);
@@ -17,6 +18,11 @@ public class Example {
     public static boolean checkPhoneNumber(String phoneNumber){
         pattern = Pattern.compile(PHONE_NUMBER_REGEX);
         matcher = pattern.matcher(phoneNumber);
+        return matcher.matches();
+    }
+    public static boolean checkIDcard(String idcard){
+        pattern = Pattern.compile(IDCARD_REGEX);
+        matcher = pattern.matcher(idcard);
         return matcher.matches();
     }
 }

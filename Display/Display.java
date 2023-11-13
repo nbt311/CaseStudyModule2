@@ -2,6 +2,7 @@ package Display;
 
 import Input.Input;
 import Manage.TypeManage.Hotel;
+import src.Guest;
 
 import java.util.Scanner;
 
@@ -28,20 +29,25 @@ public class Display {
             switch (choice) {
                 case 1:
                     hotel.displayRoomList();
-//                    hotel.displayRoomStatus();
                     break;
                 case 2:
                     // Nhập thông tin và thực hiện check-in
                     System.out.print("Nhập số phòng (ví dụ: 101): ");
-                    String roomNumberCheckIn = scanner.nextLine();
-                    System.out.print("Nhập thông tin khách: ");
+                    String roomNumberCheckIn = String.valueOf(Input.Number());
+                    System.out.print("Nhập thông tin khách: \n");
+                    System.out.println("Nhập tên khách: ");
                     String guestNameCheckIn = Input.guestName();
-                    hotel.checkIn(roomNumberCheckIn, guestNameCheckIn);
+                    System.out.println("Số điện thoại của khách: ");
+                    String phoneNumber = Input.PhoneNumber();
+                    System.out.println("Nhập chứng minh thư");
+                    String idCard = Input.IDCard();
+                    Guest guest = new Guest(guestNameCheckIn,phoneNumber,idCard);
+                    hotel.checkIn(roomNumberCheckIn, guest);
                     break;
                 case 3:
                     // Nhập thông tin và thực hiện check-out
                     System.out.print("Nhập số phòng (ví dụ: 101): ");
-                    String roomNumberCheckOut = scanner.nextLine();
+                    String roomNumberCheckOut = String.valueOf(Input.Number());
                     hotel.checkOut(roomNumberCheckOut);
                     break;
                 case 4:
@@ -50,7 +56,7 @@ public class Display {
                 case 5:
                     // Nhập thông tin và thực hiện đổi phòng
                     System.out.print("Nhập số phòng hiện tại (ví dụ: 101): ");
-                    String currentRoomNumber = scanner.nextLine();
+                    String currentRoomNumber = String.valueOf(Input.Number());
                     System.out.print("Nhập số phòng mới (ví dụ: 102): ");
                     String newRoomNumber = scanner.nextLine();
                     hotel.changeRoom(currentRoomNumber, newRoomNumber);

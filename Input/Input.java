@@ -24,6 +24,36 @@ public class Input {
                 }
             }
     }
+    public static String PhoneNumber(){
+        while (true){
+            try {
+                String phoneNumber = input.nextLine();
+                boolean isValid = Example.checkPhoneNumber(phoneNumber);
+                if (isValid){
+                    return phoneNumber;
+                }else {
+                    System.out.println("Số điện thoại không hợp lệ, vui lòng nhập lại!");
+                }
+            }catch (Exception e){
+                System.out.println("Kiểu dữ liệu bị sai");
+            }
+        }
+    }
+    public static String IDCard(){
+        while (true){
+            try {
+                String idcard = input.nextLine();
+                boolean isValid = Example.checkIDcard(idcard);
+                if (isValid){
+                    return idcard;
+                }else {
+                    System.out.println("Số CMT không hợp lệ, vui lòng nhập lại!");
+                }
+            }catch (Exception e){
+                System.out.println("Kiểu dữ liệu bị sai");
+            }
+        }
+    }
 
     public static int Number(){
         while (true){
