@@ -12,7 +12,7 @@ public class Display {
         Hotel hotel = new Hotel(3, 4);
         // Đọc trạng thái phòng và danh sách khách từ tệp khi chương trình bắt đầu
         hotel.readRoomStatusFromFile();
-//        hotel.readGuestListFromFile();
+        hotel.readGuestListFromFile();
         // Hiển thị menu và thực hiện các chức năng
         int choice;
         do {
@@ -27,7 +27,8 @@ public class Display {
             choice = Input.Number();
             switch (choice) {
                 case 1:
-                    hotel.displayRoomStatus();
+                    hotel.displayRoomList();
+//                    hotel.displayRoomStatus();
                     break;
                 case 2:
                     // Nhập thông tin và thực hiện check-in

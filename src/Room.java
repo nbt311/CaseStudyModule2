@@ -1,8 +1,9 @@
 package src;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public abstract class Room {
+public abstract class Room implements Serializable {
     private String roomNumber;
     private boolean isOccupied;
     private LocalDateTime checkInTime;

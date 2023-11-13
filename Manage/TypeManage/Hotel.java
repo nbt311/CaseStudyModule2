@@ -91,30 +91,24 @@ public class Hotel {
             System.out.println("Check-out không được xác nhận. Quay lại menu chính.");
         }
     }
-
     public void changeRoom(String currentRoomNumber, String newRoomNumber) {
         Room currentRoom = getRoom(currentRoomNumber);
         Room newRoom = getRoom(newRoomNumber);
-
         if (currentRoom == null || newRoom == null) {
             System.out.println("Phòng không tồn tại. Không thể đổi phòng.");
             return;
         }
-
         if (!currentRoom.isOccupied() || newRoom.isOccupied()) {
             System.out.println("Không thể đổi phòng. Kiểm tra lại trạng thái phòng.");
             return;
         }
-
         // Xác nhận đổi phòng và tính tiền
         double bill = calculateChangeRoomBill(currentRoom, newRoom);
         System.out.println("Số tiền cần thanh toán khi đổi phòng: $" + bill);
-
         // Xác nhận đổi phòng và cập nhật thông tin
         System.out.print("Xác nhận đổi phòng (yes/no): ");
         Scanner scanner = new Scanner(System.in);
         String confirmation = scanner.nextLine().toLowerCase();
-
         if (confirmation.equals("yes")) {
             newRoom.occupy(currentRoom.getCheckInTime());
             currentRoom.vacate();
@@ -145,80 +139,49 @@ public class Hotel {
         Duration duration = Duration.between(checkInTime, checkOutTime);
         return duration.toHours();
     }
-    public void displayRoomStatus() {
-        System.out.println("Danh sách trạng thái phòng:");
-        for (Room[] floor : rooms) {
-            for (Room room : floor) {
-                System.out.println("Phòng " + room.getRoomNumber() + ": " + (room.isOccupied() ? "Đang có khách" : "Trống"));
+    public void displayRoomList() {
+        System.out.println("Danh sách phòng:");
+        for (int i = 0; i < rooms.length; i++) {
+            for (int j = 0; j < rooms[i].length; j++) {
+                Room room = rooms[i][j];
+                String status = room.isOccupied() ? "Đang có khách" : "Trống";
+                System.out.println(room.getRoomNumber() + " - " + status);
             }
         }
     }
-
-    //Ghi danh sách phòng vào File
-    public void updateRoomStatusToFile() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("room_status.txt"))) {
-            for (int i = 0; i < rooms.length; i++) {
-                for (int j = 0; j < rooms[i].length; j++) {
-                    Room room = rooms[i][j];
-                    writer.write(room.getRoomNumber() + "," + (room.isOccupied() ? "occupied" : "vacant"));
-                    writer.newLine();
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Lỗi khi cập nhật trạng thái phòng vào tệp.");
-        }
-    }
-
     public void displayGuestList() {
-        System.out.println("Danh sách khách trọ:");
+        System.out.println("Danh sách khách:");
         for (Map.Entry<String, String> entry : guestList.entrySet()) {
             System.out.println("Phòng " + entry.getKey() + ": " + entry.getValue());
         }
     }
+    //Ghi danh sách phòng vào File
+    public void updateRoomStatusToFile() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("room_status.dat")))) {
+            oos.writeObject(rooms);
+        } catch (IOException e) {
+            System.out.println("Lỗi khi cập nhật trạng thái phòng vào tệp.");
+        }
+    }
     //Ghi danh sách khách trọ vào File
     public void updateGuestListToFile() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("guest_list.txt"))) {
-            for (Map.Entry<String, String> entry : guestList.entrySet()) {
-                writer.write(entry.getKey() + "," + entry.getValue());
-                writer.newLine();
-            }
+        try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("guest_list.dat")))) {
+            oos.writeObject(guestList);
         } catch (IOException e) {
             System.out.println("Lỗi khi cập nhật danh sách khách vào tệp.");
         }
     }
-
     public void readRoomStatusFromFile() {
-        try (BufferedReader reader = new BufferedReader(new FileReader("room_status.txt"))) {
-            String line;
-            int row = 0;
-            int col = 0;
-
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                String roomNumber = parts[0];
-                String status = parts[1];
-                Room room = getRoom(roomNumber);
-                if (room != null) {
-                    room.setOccupied("occupied".equals(status));
-                }
-                col++;
-                if (col == rooms[row].length) {
-                    col = 0;
-                    row++;
-                }
-            }
-        } catch (IOException e) {
+        try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream("room_status.dat")))) {
+            rooms = (Room[][]) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
             System.out.println("Lỗi khi đọc trạng thái phòng từ tệp.");
         }
     }
     public void readGuestListFromFile() {
-        try (BufferedReader reader = new BufferedReader(new FileReader("guest_list.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                guestList.put(parts[0], parts[1]);
-            }
-        } catch (IOException e) {
+        try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream("guest_list.dat")))) {
+            guestList = (Map<String, String>) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
             System.out.println("Lỗi khi đọc danh sách khách từ tệp.");
         }
     }
