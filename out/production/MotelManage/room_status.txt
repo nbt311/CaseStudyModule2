@@ -1,0 +1,12 @@
+101,occupied
+102,vacant
+103,vacant
+104,vacant
+201,vacant
+202,vacant
+203,vacant
+204,vacant
+301,vacant
+302,vacant
+303,vacant
+304,vacant
